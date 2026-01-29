@@ -1,0 +1,568 @@
+/* =========================
+   CLEAN STYLE.CSS (no dupes)
+   - real accordion open/close animation (content animates)
+   - less compact spacing
+   - hover fixes reveal w/ no empty gaps
+   ========================= */
+
+:root{
+  --bg:#0b0b0b;
+  --text:#eaeaea;
+  --muted:rgba(234,234,234,.70);
+  --accent:rgb(250,196,21);
+  --border:rgba(255,255,255,.10);
+
+  --nav-h:56px;
+
+  /* typography */
+  --fs-body:18px;
+  --lh-body:1.75;
+
+  /* layout */
+  --page-max:1120px;
+  --content-max:78ch;
+
+  /* panels */
+  --panel:rgba(255,255,255,.04);
+  --panel2:rgba(255,255,255,.06);
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  font-family:"Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-size:var(--fs-body);
+  line-height:var(--lh-body);
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at 50% -10%, rgba(255,255,255,0.06), transparent 60%),
+    var(--bg);
+}
+
+/* ====== Layout ====== */
+.container{
+  max-width:var(--page-max);
+  margin:0 auto;
+  padding:2rem 1rem;
+}
+
+section{
+  padding:1.75rem 0; /* less compact */
+  margin:0;
+  scroll-margin-top:calc(var(--nav-h) + 18px);
+}
+
+section p,
+section ul,
+section ol{ max-width:var(--content-max); }
+
+/* ====== Headings ====== */
+.hero h1{
+  font-weight:800;
+  letter-spacing:-0.03em;
+  line-height:1.05;
+}
+
+h2{
+  margin:0 0 1rem;
+  font-size:2.2rem;
+  font-weight:750;
+  letter-spacing:-0.02em;
+  line-height:1.15;
+  border-bottom:2px solid var(--accent);
+  padding-bottom:.35rem;
+}
+
+p{ margin:.9rem 0; }
+a{ color:var(--accent); }
+
+/* ====== Navbar ====== */
+.navbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  height:var(--nav-h);
+  display:flex;
+  align-items:center;
+  padding:0 .95rem;
+
+  background:linear-gradient(
+    to bottom,
+    rgba(11,11,11,0.96) 0%,
+    rgba(11,11,11,0.88) 70%,
+    rgba(11,11,11,0.65) 100%
+  );
+  box-shadow:0 14px 30px rgba(0,0,0,.55), 0 40px 80px rgba(0,0,0,.35);
+}
+
+.navbar ul{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  gap:1.25rem;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.navbar a{
+  position:relative;
+  color:rgba(234,234,234,.85);
+  text-decoration:none;
+  padding:.25rem 0;
+  font-weight:700;
+  letter-spacing:-0.01em;
+  font-size:.95rem;
+  transition:color 150ms ease;
+}
+
+.navbar a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  width:0%;
+  height:2px;
+  background:var(--accent);
+  transition:width 180ms ease;
+}
+
+.navbar a:hover{ color:var(--accent); }
+.navbar a:hover::after{ width:100%; }
+.navbar a.active{ color:var(--accent); }
+.navbar a.active::after{ width:100%; }
+
+/* ====== Hero ====== */
+.site-header{
+  padding:4rem 1.25rem 1.5rem;
+  padding-top:calc(4rem + var(--nav-h));
+}
+
+.hero{
+  max-width:1100px;
+  margin:0 auto;
+  display:grid;
+  gap:1.5rem;
+  grid-template-columns:1.2fr 1fr;
+  align-items:center;
+}
+
+.hero h1{
+  font-size:clamp(2.4rem,4vw,3.6rem);
+  margin:0 0 .5rem;
+}
+
+.hero-sub,.hero-tagline{
+  margin:.25rem 0;
+  color:var(--muted);
+}
+
+.hero-cta{
+  margin-top:1.25rem;
+  display:flex;
+  gap:.75rem;
+  flex-wrap:wrap;
+}
+
+.download-btn{
+  display:inline-block;
+  padding:.75rem 1.1rem;
+  background:var(--accent);
+  color:#000;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:600;
+}
+.download-btn:hover{ opacity:.9; }
+
+.ghost-btn{
+  display:inline-block;
+  padding:.75rem 1.1rem;
+  border:1px solid var(--border);
+  color:var(--text);
+  text-decoration:none;
+  border-radius:10px;
+}
+.ghost-btn:hover{ border-color:rgba(255,255,255,.25); }
+
+.hero-right{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.hero-icon{
+  width:min(340px,70vw);
+  height:auto;
+  object-fit:contain;
+  border:none;
+  border-radius:0;
+  filter:invert(1) opacity(.9) drop-shadow(0 16px 40px rgba(0,0,0,.65));
+}
+
+/* ====== Preview ====== */
+.preview-grid{
+  display:flex;
+  gap:1rem;
+  align-items:flex-start;
+}
+
+.preview-grid img{
+  flex:1 1 0;
+  max-width:250px;
+  height:auto;
+  object-fit:contain;
+  border:1px solid var(--border);
+  background:#fff;
+}
+
+/* ====== Footer ====== */
+footer{
+  text-align:center;
+  padding:2rem 1rem;
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+/* =========================
+   Creative Process (Accordion)
+   ========================= */
+
+.process-intro{
+  max-width:var(--content-max);
+  color:var(--muted);
+  margin:0 0 1.6rem;
+  font-size:1.03rem;
+}
+
+.process-groups{
+  max-width:var(--content-max);
+  display:grid;
+  gap:1.05rem; /* looser */
+}
+
+/* each <details> row */
+.process-acc{
+  border:1px solid var(--border);
+  background:var(--panel);
+  border-radius:16px;
+  overflow:hidden;
+  transition:background 180ms ease,border-color 180ms ease,transform 180ms ease;
+}
+
+.process-acc:hover{
+  background:var(--panel2);
+  border-color:rgba(255,255,255,.18);
+  transform:translateY(-1px);
+}
+
+/* header row */
+.process-acc summary{
+  list-style:none;
+  cursor:pointer;
+  user-select:none;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+
+  padding:1.05rem 1.1rem; /* less compact */
+  font-weight:800;
+  letter-spacing:-0.01em;
+}
+
+.process-acc summary::-webkit-details-marker{ display:none; }
+
+.process-acc summary .left{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+
+/* badge */
+.process .badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:30px;
+  min-width:46px;
+  padding:0 12px;
+  border-radius:999px;
+
+  font-size:.85rem;
+  font-weight:900;
+  letter-spacing:.08em;
+
+  color:rgba(250,196,21,.95);
+  background:rgba(250,196,21,.10);
+  border:1px solid rgba(250,196,21,.22);
+}
+
+/* arrow */
+.process-acc summary .chev{
+  color:var(--accent);
+  font-size:1.2rem;
+  transform:rotate(0deg);
+  transition:transform 200ms ease;
+}
+.process-acc[open] summary .chev{
+  transform:rotate(90deg);
+}
+
+/* ===== THE IMPORTANT PART: content open/close animation =====
+   We animate the inner wrapper height (max-height) + opacity.
+   This avoids “instant snap” most people get with <details>. */
+
+.process .details-body{
+  padding:0 1.1rem;
+}
+
+/* collapsed state */
+.process .details-inner{
+  max-height:0;
+  opacity:0;
+  transform:translateY(-6px);
+  overflow:hidden;
+
+  padding-bottom:0;
+
+  transition:
+    max-height 420ms ease,
+    opacity 220ms ease,
+    transform 220ms ease,
+    padding-bottom 420ms ease;
+}
+
+/* open state */
+.process-acc[open] .details-inner{
+  max-height:900px; /* big enough for longest list */
+  opacity:1;
+  transform:translateY(0);
+  padding-bottom:1.1rem;
+}
+
+/* content spacing inside */
+.process .details-inner p{ margin:.95rem 0; }
+.process .details-inner ul{ margin:.75rem 0 0; padding-left:1.15rem; }
+.process .details-inner li{ margin:.55rem 0; }
+.process .details-inner strong{ color:rgba(255,255,255,.95); }
+
+/* =========================
+   Challenges → Fixes
+   - no empty gap when not hovered
+   ========================= */
+
+.challenge-list{
+  list-style:none;
+  margin:.85rem 0 0;
+  padding:0;
+  display:grid;
+  gap:.85rem;
+}
+
+.challenge-item{
+  padding:.9rem .95rem;
+  border-radius:12px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform 160ms ease,background 160ms ease,border-color 160ms ease;
+}
+
+.challenge-item:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.16);
+}
+
+.challenge-item .challenge{
+  display:block;
+  font-weight:800;
+  color:rgba(255,255,255,.92);
+}
+
+/* collapsed by default (no blank space) */
+.challenge-item .fix{
+  display:block;
+  margin-top:.45rem;
+
+  opacity:0;
+  max-height:0;
+  overflow:hidden;
+
+  color:rgba(234,234,234,.72);
+  transform:translateY(-4px);
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    max-height 240ms ease;
+}
+
+.challenge-item:hover .fix{
+  opacity:1;
+  transform:translateY(0);
+  max-height:140px;
+}
+
+.process .hint{
+  margin-top:1rem;
+  color:rgba(234,234,234,.55);
+  font-size:.95rem;
+}
+
+/* ====== Responsive ====== */
+@media (max-width:900px){
+  .hero{ grid-template-columns:1fr; }
+  .hero-right img{ max-height:260px; }
+}
+
+@media (max-width:600px){
+  .container{ padding:1.5rem 1rem; }
+  section{ padding:1.35rem 0; }
+
+  .preview-grid{
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    padding-bottom:.75rem;
+  }
+  .preview-grid img{
+    flex:0 0 80%;
+    scroll-snap-align:start;
+  }
+
+  /* hover not reliable on mobile -> show fixes */
+  .challenge-item .fix{
+    opacity:1;
+    transform:none;
+    max-height:240px;
+  }
+
+  .download-btn{ width:100%; text-align:center; }
+}
+
+/* Optional: respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* =========================
+   Footer (Zach Jordan–style)
+   ========================= */
+
+.site-footer {
+  margin-top: 4rem;
+  padding: 2.25rem 1.25rem;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.85),
+    rgba(0,0,0,0.65)
+  );
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-credit {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(234,234,234,0.65);
+  letter-spacing: -0.01em;
+}
+
+/* Back to top link */
+.back-to-top {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(234,234,234,0.65);
+  text-decoration: none;
+  transition: color 150ms ease, transform 150ms ease;
+}
+
+.back-to-top:hover {
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/*  */
+.reveal{
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.reveal.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal{ opacity: 1; transform: none; transition: none; }
+}
+
+a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
+  will-change: transform;
+}
+
+@media (hover:hover){
+  .download-btn:hover,
+  .ghost-btn:hover{
+    transform: translateY(-1px);
+  }
+}
+
+.scroll-meter{
+  margin-left: auto;
+  width: 140px;
+  height: 2px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.scroll-meter span{
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+}
+
+/* hero cursor blinking */
+.hero-title {
+  display: inline-flex;
+  align-items: center;
+}
+
+.cursor {
+  width: 2px;                 /* thin caret */
+  height: 1em;
+  margin-left: 0.12em;
+  background: #ffffff;        /* white cursor */
+  display: inline-block;
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
