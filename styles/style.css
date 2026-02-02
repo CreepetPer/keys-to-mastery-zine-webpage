@@ -27,6 +27,17 @@
   --panel2:rgba(255,255,255,.06);
 }
 
+:root{
+  --progress-dark: var(--accent-dark);   /* yellow */
+  --progress-light: var(--accent-light); /* green */
+}
+
+/* default: dark (yellow) */
+.scroll-meter span{
+  background: var(--progress-dark);
+  transition: width 120ms linear, background-color 180ms ease;
+}
+
 *{ box-sizing:border-box; }
 html{ scroll-behavior:smooth; }
 
@@ -45,7 +56,7 @@ body{
 .container{
   max-width:var(--page-max);
   margin:0 auto;
-  padding:2rem 1rem;
+  padding:2.75rem 1rem;
 }
 
 section{
@@ -76,7 +87,7 @@ h2{
 }
 
 p{ margin:.9rem 0; }
-a{ color:var(--accent); }
+a{ color: inherit; }
 
 /* ====== Navbar ====== */
 .navbar{
@@ -87,6 +98,7 @@ a{ color:var(--accent); }
   display:flex;
   align-items:center;
   padding:0 .95rem;
+  gap: 0.25rem;
 
   background:linear-gradient(
     to bottom,
@@ -124,15 +136,46 @@ a{ color:var(--accent); }
   left:0;
   bottom:-6px;
   width:0%;
-  height:2px;
+  height:3.5px;        /* ← thicker line */
   background:var(--accent);
-  transition:width 180ms ease;
+  border-radius: 999px;    /* optional: makes it feel nicer */
+  transition:
+    width 180ms ease,
+    height 180ms ease;
 }
 
 .navbar a:hover{ color:var(--accent); }
 .navbar a:hover::after{ width:100%; }
 .navbar a.active{ color:var(--accent); }
-.navbar a.active::after{ width:100%; }
+.navbar a.active::after{
+  width:100%;
+}
+
+/* ===== Navbar logo ===== */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+  padding-right: 0.25rem;
+}
+
+.nav-logo img {
+  width: 22px;
+  height: 22px;
+  opacity: 0.85;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+/* subtle affordance */
+.nav-logo:hover img {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+/* Navbar logo should NOT get underline */
+.nav-logo::after {
+  display: none !important;
+}
 
 /* ====== Hero ====== */
 .site-header{
@@ -232,9 +275,8 @@ footer{
 
 .process-intro{
   max-width:var(--content-max);
-  color:var(--muted);
+  color:#eaeaea;
   margin:0 0 1.6rem;
-  font-size:1.03rem;
 }
 
 .process-groups{
@@ -411,6 +453,7 @@ footer{
   margin-top:1rem;
   color:rgba(234,234,234,.55);
   font-size:.95rem;
+  font-style: italic;
 }
 
 /* ====== Responsive ====== */
@@ -463,6 +506,7 @@ footer{
     rgba(0,0,0,0.85),
     rgba(0,0,0,0.65)
   );
+  letter-spacing: 0.02em;
 }
 
 .footer-inner {
@@ -502,6 +546,9 @@ footer{
     flex-direction: column;
     align-items: flex-start;
   }
+  .process .hint {
+    display: none;
+  }
 }
 
 /*  */
@@ -532,11 +579,14 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
 }
 
 .scroll-meter{
-  margin-left: auto;
-  width: 140px;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
   height: 2px;
-  background: rgba(255,255,255,0.10);
-  border-radius: 999px;
+
+  background: rgba(255,255,255,0.08);
   overflow: hidden;
 }
 
@@ -545,6 +595,7 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
   height: 100%;
   width: 0%;
   background: var(--accent);
+  transition: width 100ms linear;
 }
 
 /* hero cursor blinking */
@@ -565,4 +616,193 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
 @keyframes blink {
   0%, 50% { opacity: 1; }
   50.01%, 100% { opacity: 0; }
+}
+
+/* =========================
+   Alternating sections (white / dark)
+   - dark = yellow accent
+   - light = green accent + designed look
+   ========================= */
+
+:root{
+  --accent-dark: rgb(250,196,21); /* yellow */
+  --accent-light: #228B22;        /* forest green */
+  --light-bg: #eab308;
+  --light-text: #0b0b0b;
+  --light-muted: rgba(10,10,10,0.70);
+  --light-border: rgba(0,0,0,0.12);
+}
+
+/* section spacing (ZJ-ish) */
+.section{
+  padding: 4.25rem 0;
+  position: relative;
+}
+
+/* DARK sections */
+.section--dark{
+  background:
+    radial-gradient(900px 500px at 50% -10%, rgba(255,255,255,0.06), transparent 60%),
+    #0b0b0b;
+  color: var(--text);
+
+  --section-accent: var(--accent-dark);
+  --section-muted: var(--muted);
+  --section-border: var(--border);
+}
+
+/* LIGHT sections */
+.section--light{
+  background: var(--light-bg);
+  color: var(--light-text);
+
+  --section-accent: var(--accent-light);
+  --section-muted: var(--light-muted);
+  --section-border: var(--light-border);
+
+  box-shadow:
+    0 -1px 0 rgba(0,0,0,0.06),
+    0  1px 0 rgba(0,0,0,0.06);
+}
+
+/* subtle “designed” texture on light sections */
+.section--light::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 50% -20%, rgba(0,0,0,0.06), transparent 60%),
+    linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02));
+  opacity: 0.35;
+}
+
+.section--light .container{
+  position: relative;
+  z-index: 1;
+}
+
+/* headings adapt per section */
+.section--dark h2{
+  border-bottom-color: var(--section-accent);
+  color: var(--text);
+}
+
+.section--light h2{
+  border-bottom-color: var(--section-accent); /* green underline */
+  color: var(--light-text);
+  padding-left: 0;       /* remove space for the bar */
+  position: static;      /* reset */
+}
+
+.section--light h2::before{
+  content: none;         /* kill the vertical bar */
+}
+
+/* body text on light */
+.section--light p,
+.section--light li{
+  color: rgba(10,10,10,0.88);
+}
+
+.section--light .hero-sub,
+.section--light .hero-tagline{
+  color: var(--section-muted);
+}
+
+/* links: yellow on dark, green on light */
+.section--dark a{ color: var(--accent-dark); }
+.section--light a{
+  color: var(--section-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+.section--light p,
+.section--light li{
+  font-weight: 500;
+}
+
+.section--light a:hover{ opacity: 0.85; }
+
+/* Make “cards” read right if they ever appear in light sections */
+.section--light .process-acc{
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.12);
+}
+.section--light .process-acc:hover{
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.18);
+}
+.section--light .process-acc summary{
+  color: rgba(0,0,0,0.92);
+}
+.section--light .process .badge{
+  color: rgba(22,163,74,0.95);
+  background: rgba(22,163,74,0.10);
+  border: 1px solid rgba(22,163,74,0.22);
+}
+.section--light .process-acc summary .chev{
+  color: var(--section-accent);
+}
+
+/* challenges cards on light */
+.section--light .challenge-item{
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.10);
+}
+.section--light .challenge-item:hover{
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.16);
+}
+.section--light .challenge-item .challenge{
+  color: rgba(0,0,0,0.92);
+}
+.section--light .challenge-item .fix{
+  color: rgba(0,0,0,0.68);
+}
+
+/* ===== Yellow section soft fade ===== */
+.section--light{
+  position: relative;
+  overflow: hidden;
+}
+
+/* top fade */
+.section--light::before,
+.section--light::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  height:60px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* fade into yellow from top */
+.section--light::before{
+  top:0;
+  background: linear-gradient(
+    to bottom,
+    rgba(11,11,11,0.25),
+    rgba(11,11,11,0.0)
+  );
+}
+
+/* fade back into dark at bottom */
+.section--light::after{
+  bottom:0;
+  background: linear-gradient(
+    to top,
+    rgba(11,11,11,0.25),
+    rgba(11,11,11,0.0)
+  );
+}
+
+/* keep content above fades */
+.section--light > .container{
+  position: relative;
+  z-index: 1;
 }
