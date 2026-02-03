@@ -53,3 +53,77 @@ window.addEventListener("scroll", () => {
   const pct = max > 0 ? (doc.scrollTop / max) * 100 : 0;
   meter.style.width = `${pct}%`;
 }, { passive: true });
+
+// ===== Smooth accordion for <details> (always animates) =====
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+document.querySelectorAll(".process-acc").forEach((details) => {
+  const summary = details.querySelector("summary");
+  const body = details.querySelector(".details-body");
+
+  if (!summary || !body) return;
+
+  // Ensure correct initial height
+  if (!details.open) body.style.height = "0px";
+
+  summary.addEventListener("click", (e) => {
+    if (prefersReduced) return; // keep native behavior for accessibility
+    e.preventDefault();
+
+    const isOpening = !details.open;
+
+    // Accordion behavior: close others when opening
+    if (isOpening) {
+      document.querySelectorAll(".process-acc[open]").forEach((other) => {
+        if (other !== details) closeDetails(other);
+      });
+      openDetails(details);
+    } else {
+      closeDetails(details);
+    }
+  });
+
+  function openDetails(d) {
+    const b = d.querySelector(".details-body");
+    if (!b) return;
+
+    // Start closed -> open attribute -> measure -> animate to height
+    b.style.height = "0px";
+    d.open = true;
+
+    // Force layout so the browser "sees" the 0px height first
+    b.getBoundingClientRect();
+
+    const target = b.scrollHeight;
+    b.style.transition = "height 420ms ease";
+    b.style.height = `${target}px`;
+
+    b.addEventListener("transitionend", function onEnd(ev) {
+      if (ev.propertyName !== "height") return;
+      b.removeEventListener("transitionend", onEnd);
+      b.style.transition = "";
+      b.style.height = "auto"; // allow responsive content
+    });
+  }
+
+  function closeDetails(d) {
+    const b = d.querySelector(".details-body");
+    if (!b) return;
+
+    // From auto -> fixed px -> animate to 0
+    const start = b.scrollHeight;
+    b.style.height = `${start}px`;
+    b.getBoundingClientRect();
+
+    b.style.transition = "height 420ms ease";
+    b.style.height = "0px";
+
+    b.addEventListener("transitionend", function onEnd(ev) {
+      if (ev.propertyName !== "height") return;
+      b.removeEventListener("transitionend", onEnd);
+      d.open = false;
+      b.style.transition = "";
+      b.style.height = "0px";
+    });
+  }
+});
