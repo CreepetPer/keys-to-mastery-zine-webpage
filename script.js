@@ -1,25 +1,115 @@
-// ===== Active nav link (no color switching) =====
+// ===== Environment =====
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// ===== Active nav link (stable + bottom-of-page + instant click) =====
 const sections = [...document.querySelectorAll("main section[id]")];
 const navLinks = [...document.querySelectorAll(".navbar a[href^='#']")];
 const byId = new Map(navLinks.map(a => [a.getAttribute("href").slice(1), a]));
 
-const io = new IntersectionObserver((entries) => {
-  // pick the most visible section to avoid flicker
-  const visible = entries
-    .filter(e => e.isIntersecting)
-    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+const nav = document.querySelector(".navbar");
 
-  if (!visible) return;
-
+function setActiveById(id) {
   navLinks.forEach(a => a.classList.remove("active"));
-  const link = byId.get(visible.target.id);
+  const link = byId.get(id);
   if (link) link.classList.add("active");
-}, {
-  root: null,
-  threshold: [0.25, 0.4, 0.6]
+}
+
+function setActiveSection() {
+  if (!sections.length) return;
+
+  // If we're mid-scroll from a click, don't override active yet
+  if (activeLockId) return;
+
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  const probeY = navH + 18; // aligns with your scroll-margin-top
+
+  const scrollY = window.scrollY || document.documentElement.scrollTop;
+  const maxScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+  // If user is at (or very near) the bottom, force last section active (fixes short download section)
+  if (maxScroll > 0 && scrollY >= maxScroll - 2) {
+    setActiveById(sections[sections.length - 1].id);
+    return;
+  }
+
+  // Otherwise, choose the last section whose top is above the probe line
+  let current = sections[0];
+  for (const s of sections) {
+    if (s.getBoundingClientRect().top <= probeY) current = s;
+    else break;
+  }
+
+  setActiveById(current.id);
+}
+
+// rAF-throttled scroll handler
+let ticking = false;
+window.addEventListener("scroll", () => {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    setActiveSection();
+    ticking = false;
+  });
+}, { passive: true });
+
+window.addEventListener("resize", setActiveSection);
+
+// ===== Instant active on click (no delay) + lock until target reached =====
+let activeLockId = null;
+
+function clearActiveLock() {
+  activeLockId = null;
+}
+
+function isTargetReached(id) {
+  const target = document.getElementById(id);
+  if (!target) return true;
+
+  const navH = nav ? nav.getBoundingClientRect().height : 0;
+  const probeY = navH + 18;
+  return target.getBoundingClientRect().top <= probeY - 2;
+}
+
+navLinks.forEach((a) => {
+  a.addEventListener("click", () => {
+    const id = a.getAttribute("href").slice(1);
+
+    setActiveById(id);
+    activeLockId = id;
+
+    if (prefersReduced) {
+      clearActiveLock();
+      requestAnimationFrame(setActiveSection);
+      return;
+    }
+
+    const start = performance.now();
+    const maxMs = 1800;
+    let reachedFrames = 0;
+
+    function tick() {
+      if (activeLockId !== id) return; // ignore if another click happened
+
+      if (isTargetReached(id)) reachedFrames += 1;
+      else reachedFrames = 0;
+
+      if (reachedFrames >= 2 || (performance.now() - start > maxMs)) {
+        clearActiveLock();
+        setActiveSection();
+        return;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  });
 });
 
-sections.forEach(s => io.observe(s));
+
+// Initial run
+setActiveSection();
 
 
 // ===== Reveal on scroll (replays) =====
@@ -55,7 +145,6 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 
 // ===== Smooth accordion for <details> (always animates) =====
-const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 document.querySelectorAll(".process-acc").forEach((details) => {
   const summary = details.querySelector("summary");

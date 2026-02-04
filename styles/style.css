@@ -119,7 +119,7 @@ a{ color: inherit; }
   align-items:center;
 }
 
-.navbar a{
+.navbar .nav-links a{
   position:relative;
   color:rgba(234,234,234,.85);
   text-decoration:none;
@@ -130,25 +130,78 @@ a{ color: inherit; }
   transition:color 150ms ease;
 }
 
-.navbar a::after{
+.navbar .nav-links a::after{
   content:"";
   position:absolute;
   left:0;
   bottom:-6px;
   width:0%;
-  height:3.5px;        /* ← thicker line */
+  height:3.5px;
   background:var(--accent);
-  border-radius: 999px;    /* optional: makes it feel nicer */
-  transition:
-    width 180ms ease,
-    height 180ms ease;
+  border-radius:999px;
+  transition:width 180ms ease, height 180ms ease;
 }
 
-.navbar a:hover{ color:var(--accent); }
-.navbar a:hover::after{ width:100%; }
-.navbar a.active{ color:var(--accent); }
-.navbar a.active::after{
-  width:100%;
+.navbar .nav-links a:hover{ color:var(--accent); }
+.navbar .nav-links a:hover::after{ width:100%; }
+.navbar .nav-links a.active{ color:var(--accent); }
+.navbar .nav-links a.active::after{ width:100%; }
+
+.nav-cta a::after{
+  display:none !important;
+}
+
+/* layout */
+.navbar{
+  justify-content: space-between;
+}
+
+.navbar .nav-links{
+  margin-left: 0.5rem;
+  flex: 1;
+}
+
+/* keep nav links on the left */
+.navbar .nav-links{
+  display:flex;
+  gap:1.25rem;
+  align-items:center;
+}
+
+/* CTA buttons on the right */
+.nav-cta{
+  display:flex;
+  gap:.8rem;
+  align-items:center;
+  margin-left:auto;
+}
+
+/* remove underline system for CTA buttons */
+.nav-cta a::after{
+  display:none !important;
+}
+
+/* CTA buttons: slightly tighter than hero so they fit navbar */
+.nav-cta .nav-btn{
+  padding:.5rem .9rem;
+  border-radius:6px;
+  font-size:.9rem;
+  line-height:1;
+}
+
+/* make ghost button border slightly clearer in navbar */
+.nav-cta .ghost-btn{
+  border-color: rgba(255,255,255,.18);
+}
+.nav-cta .ghost-btn:hover{
+  border-color: rgba(255,255,255,.28);
+}
+
+@media (max-width: 600px){
+  .nav-cta .nav-btn{
+    padding:.45rem .75rem;
+    font-size:.85rem;
+  }
 }
 
 /* ===== Navbar logo ===== */
