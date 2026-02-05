@@ -206,6 +206,10 @@ a{ color: inherit; }
     width:100%;
     justify-content:space-between;
   }
+  #download .format-grid{
+    background: none;
+    padding: 0;
+  }
 }
 
 /* ===== Navbar logo ===== */
@@ -271,16 +275,44 @@ a{ color: inherit; }
   flex-wrap:wrap;
 }
 
+/* ===== Download button (Warp-style invert) ===== */
 .download-btn{
-  display:inline-block;
+  /* theme defaults (dark site) */
+  --btn-bg: var(--accent);
+  --btn-fg: #0b0b0b;
+  --btn-bd: transparent;
+
+  /* hover “invert” */
+  --btn-bg-hover: rgba(255,255,255,0.08);
+  --btn-fg-hover: var(--accent);
+  --btn-bd-hover: rgba(255,255,255,0.18);
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
   padding:.75rem 1.1rem;
-  background:var(--accent);
-  color:#000;
-  text-decoration:none;
   border-radius:6px;
+
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 0px solid var(--btn-bd);
+
   font-weight:600;
+  text-decoration:none;
+  letter-spacing:-0.01em;
+
+  transition:
+    background-color 550ms cubic-bezier(.2,.8,.2,1),
+    color 550ms cubic-bezier(.2,.8,.2,1),
+    border-color 550ms cubic-bezier(.2,.8,.2,1);
 }
-.download-btn:hover{ opacity:.9; }
+
+.download-btn:hover{
+  background: var(--btn-bg-hover);
+  color: var(--btn-fg-hover);
+  border-color: var(--btn-bd-hover);
+}
 
 .ghost-btn{
   display:inline-block;
@@ -571,6 +603,17 @@ footer{
   }
 
   .download-btn{ width:100%; text-align:center; }
+
+  #download .format-grid{
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  }
+  #download .format-card p{
+    max-width: none;
+  }
+  #download .format-card .download-btn{
+    width: 100%;
+  }
 }
 
 /* Optional: respect reduced motion */
@@ -636,7 +679,7 @@ footer{
   place-items:center;
 
   background: rgba(255,255,255,0.06);
-  border:1px solid rgba(255,255,255,0.14);
+  border:0px solid rgba(255,255,255,0.14);
 
   text-decoration:none;
 
@@ -831,7 +874,7 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
 
 /* links: yellow on dark, green on light */
 .section--dark a{ color: var(--accent-dark); }
-.section--light a{
+.section--light a:not(.download-btn):not(.ghost-btn):not(.nav-btn){
   color: var(--section-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -924,4 +967,81 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
 .section--light > .container{
   position: relative;
   z-index: 1;
+}
+
+#download{
+  padding: 7rem 0 8rem;
+}
+
+/* ===== Download buttons (light section) — same animation, different colors ===== */
+/* Download section buttons (yellow-on-black by default) */
+#download .download-btn{
+  --btn-bg: #0b0b0b;
+  --btn-fg: rgb(250,196,21);          /* yellow text */
+  --btn-bd: rgba(0,0,0,0.35);
+
+  /* hover invert (still Warp-y) */
+  --btn-bg-hover: rgb(250,196,21,0.62); /* hover bg */
+  --btn-fg-hover: #0b0b0b; /* hover text color */
+  --btn-bd-hover: rgba(0,0,0,0.35);
+
+  text-decoration: none; /* kill underline */
+}
+
+#download .download-btn:active{
+  background: rgba(255,255,255,0.32);
+}
+
+#download .download-btn:hover{
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .download-btn{ transition: none !important; }
+}
+
+/* ===== Download section layout ===== */
+#download .download-sub{
+  margin-top: .75rem;
+  max-width: 55ch;
+  color: #0b0b0b;
+  opacity: 0.75;
+}
+
+#download .format-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  margin-top: 2.25rem;
+  padding: 0 1.25rem;
+
+  /* draw rails + center divider as ONE background (perfectly even) */
+  --dl-line: rgba(0,0,0,0.35);
+  background:
+    linear-gradient(var(--dl-line), var(--dl-line)) left / 1px 100% no-repeat,
+    linear-gradient(var(--dl-line), var(--dl-line)) right / 1px 100% no-repeat,
+    linear-gradient(var(--dl-line), var(--dl-line)) center / 1px 100% no-repeat;
+}
+
+#download .format-card{
+  padding: 2rem 2.25rem;
+  background: transparent;
+}
+
+#download .format-card h3{
+  margin: 0 0 .5rem;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+}
+
+#download .format-card p{
+  margin: 0;
+  font-size: .95rem;
+  opacity: .85;
+  max-width: 30ch;
+}
+
+#download .format-card .download-btn{
+  margin-top: 1.25rem;
+  width: auto;
 }
