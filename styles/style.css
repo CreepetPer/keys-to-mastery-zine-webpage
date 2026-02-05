@@ -202,6 +202,10 @@ a{ color: inherit; }
     padding:.45rem .75rem;
     font-size:.85rem;
   }
+  .back-to-top{
+    width:100%;
+    justify-content:space-between;
+  }
 }
 
 /* ===== Navbar logo ===== */
@@ -222,7 +226,6 @@ a{ color: inherit; }
 /* subtle affordance */
 .nav-logo:hover img {
   opacity: 1;
-  transform: translateY(-1px);
 }
 
 /* Navbar logo should NOT get underline */
@@ -320,6 +323,11 @@ a{ color: inherit; }
   background:#fff;
 }
 
+#preview img{
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+}
+
 /* ====== Footer ====== */
 footer{
   text-align:center;
@@ -392,14 +400,15 @@ footer{
   min-width:46px;
   padding:0 12px;
   border-radius:999px;
+  margin-right: 0.9rem;
 
-  font-size:.85rem;
+  font-size:0.95rem;
   font-weight:900;
-  letter-spacing:.08em;
+  letter-spacing:.15em;
 
   color:rgba(250,196,21,.95);
-  background:rgba(250,196,21,.10);
-  border:1px solid rgba(250,196,21,.22);
+  background:none;
+  border:none;
 }
 
 /* arrow */
@@ -604,18 +613,51 @@ footer{
   letter-spacing: -0.01em;
 }
 
-/* Back to top link */
-.back-to-top {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgba(234,234,234,0.65);
-  text-decoration: none;
-  transition: color 150ms ease, transform 150ms ease;
+/* Back to top (label + button) */
+.back-to-top{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
 }
 
-.back-to-top:hover {
-  color: var(--accent);
-  transform: translateY(-1px);
+.back-to-top__label{
+  font-size:0.9rem;
+  color: rgba(234,234,234,0.65); /* slightly dimmer than credit */
+  letter-spacing:-0.01em;
+}
+
+/* circular arrow button */
+.back-to-top__btn{
+  width:42px;
+  height:42px;
+  border-radius:999px;
+
+  display:grid;
+  place-items:center;
+
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14);
+
+  text-decoration:none;
+
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+/* draw arrow with CSS */
+.back-to-top__btn::before{
+  content:"";
+  width:10px;
+  height:10px;
+  border-right:2px solid var(--accent);
+  border-top:2px solid var(--accent);
+  transform: rotate(-45deg);
+  margin-top:2px; /* optical centering */
+  transition: opacity 150ms ease;
+}
+
+.back-to-top__btn:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.22);
 }
 
 /* Mobile */
@@ -652,7 +694,7 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
 @media (hover:hover){
   .download-btn:hover,
   .ghost-btn:hover{
-    transform: translateY(-1px);
+    transform: translateY(0px);
   }
 }
 
