@@ -602,8 +602,6 @@ footer{
     max-height:240px;
   }
 
-  .download-btn{ width:100%; text-align:center; }
-
   #download .format-grid{
   grid-template-columns: 1fr;
   gap: 1.25rem;
@@ -981,7 +979,7 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
   --btn-bd: rgba(0,0,0,0.35);
 
   /* hover invert (still Warp-y) */
-  --btn-bg-hover: rgb(250,196,21,0.62); /* hover bg */
+  --btn-bg-hover: rgba(255, 204, 35, 0.62); /* hover bg */
   --btn-fg-hover: #0b0b0b; /* hover text color */
   --btn-bd-hover: rgba(0,0,0,0.35);
 
@@ -1044,4 +1042,97 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
 #download .format-card .download-btn{
   margin-top: 1.25rem;
   width: auto;
+}
+
+/* =========================
+   Mobile fixes (final overrides)
+   ========================= */
+@media (max-width: 600px){
+  /* Navbar: keep only logo + CTA */
+  .nav-links{
+    display:none;
+  }
+
+  .navbar{
+    padding: .55rem .75rem;
+    gap: .75rem;
+  }
+
+  .nav-logo{
+    margin-right: .25rem;
+  }
+
+  .nav-cta{
+    margin-left:auto;
+  }
+}
+
+@media (max-width: 600px){
+  .hero-cta{
+    display:flex;
+    flex-direction:column;
+    gap:.85rem;
+  }
+
+  .hero-cta .download-btn,
+  .hero-cta .ghost-btn{
+    width:100%;
+    text-align:center;
+  }
+}
+
+@media (max-width: 600px){
+  .hero-right{
+    order:-1;
+    margin-bottom:.75rem;
+  }
+
+  .hero-icon{
+    width:min(280px, 72vw);
+    height:auto;
+  }
+}
+
+/* Download section: match other sections + fix mobile layout */
+#download .format-grid{
+  padding: 0;              /* match other sections’ horizontal rhythm */
+}
+
+/* Mobile: single column + remove the center divider background */
+@media (max-width: 600px){
+  #download .format-grid{
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 0;
+    background:
+      linear-gradient(var(--dl-line), var(--dl-line)) left / 1px 100% no-repeat,
+      linear-gradient(var(--dl-line), var(--dl-line)) right / 1px 100% no-repeat;
+  }
+
+  #download .format-card{
+    padding: 1.5rem 1.25rem;
+  }
+
+  #download .format-card p{
+    max-width: none;
+  }
+
+  #download .format-card .download-btn{
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px){
+  .back-to-top{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:right; /* keeps label directly beside button */
+    gap:.65rem;
+  }
+
+  .back-to-top__label{
+    margin:0;
+    white-space:nowrap;
+  }
 }
