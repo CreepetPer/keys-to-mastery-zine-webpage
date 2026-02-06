@@ -8,6 +8,8 @@ const byId = new Map(navLinks.map(a => [a.getAttribute("href").slice(1), a]));
 
 const nav = document.querySelector(".navbar");
 
+
+
 function setActiveById(id) {
   navLinks.forEach(a => a.classList.remove("active"));
   const link = byId.get(id);
@@ -216,3 +218,39 @@ document.querySelectorAll(".process-acc").forEach((details) => {
     });
   }
 });
+
+// ===== Mobile nav toggle (hamburger -> X + dropdown) =====
+const navToggle = document.querySelector(".nav-toggle");
+const navMenu = document.querySelector(".nav-links");
+
+function closeMobileNav(){
+  if (!nav || !navToggle) return;
+  nav.classList.remove("is-open");
+  navToggle.setAttribute("aria-expanded", "false");
+  navToggle.setAttribute("aria-label", "Open menu");
+}
+
+if (nav && navToggle && navMenu){
+  navToggle.addEventListener("click", (e) => {
+    e.stopPropagation(); // prevents the “outside click” handler from instantly closing it
+    const isOpen = nav.classList.toggle("is-open");
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+    navToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+  });
+
+  // close after tapping a nav link
+  navMenu.addEventListener("click", (e) => {
+    if (e.target.closest("a")) closeMobileNav();
+  });
+
+  // close on Esc
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMobileNav();
+  });
+
+  // close when tapping outside the navbar
+  document.addEventListener("click", (e) => {
+    if (!nav.classList.contains("is-open")) return;
+    if (!nav.contains(e.target)) closeMobileNav();
+  });
+}

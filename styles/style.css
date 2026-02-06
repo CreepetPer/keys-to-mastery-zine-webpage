@@ -194,7 +194,7 @@ a{ color: inherit; }
   border-color: rgba(255,255,255,.18);
 }
 .nav-cta .ghost-btn:hover{
-  border-color: rgba(255,255,255,.28);
+  border-color: rgba(255, 255, 255, 0.459);
 }
 
 @media (max-width: 600px){
@@ -322,7 +322,24 @@ a{ color: inherit; }
   text-decoration:none;
   border-radius:10px;
 }
-.ghost-btn:hover{ border-color:rgba(255,255,255,.25); }
+
+.ghost-btn:hover{ border-color:rgba(255, 255, 255, 0.384); }
+
+/* Preview button hover animation */
+.ghost-btn{
+  position: relative;
+  transition:
+    transform 420ms cubic-bezier(.2,.8,.2,1),
+    opacity 420ms cubic-bezier(.2,.8,.2,1),
+    border-color 420ms ease;
+}
+
+@media (hover:hover){
+  .ghost-btn:hover{
+    transform: translateX(4px);
+    opacity: 0.9;
+  }
+}
 
 .hero-right{
   display:flex;
@@ -1044,15 +1061,154 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
   width: auto;
 }
 
+/* hamburger hidden by default (desktop) */
+.nav-toggle{
+  display: none;
+}
+
+/* =========================
+   Mobile nav: hamburger + animated dropdown
+   ========================= */
+@media (max-width: 600px){
+
+  /* Force-hide hamburger on desktop just in case something overrides */
+  /* (This line is harmless here, but we'll harden desktop below too.) */
+
+  /* Stop wrapping behavior */
+  .navbar ul{ flex-wrap: nowrap; }
+
+  /* Hamburger button */
+  .nav-toggle{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 34px;
+    width: 42px;
+    padding: 0;
+    border-radius: 6px;
+
+    border: 1px solid rgba(255,255,255,0.18);
+    background: transparent;
+    color: rgba(234,234,234,0.92);
+
+    transition:
+      background-color 320ms ease,
+      border-color 320ms ease,
+      transform 220ms ease;
+  }
+
+  @media (hover:hover){
+    .nav-toggle:hover{
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.32);
+    }
+  }
+
+  .nav-toggle:active{ transform: scale(0.94); }
+
+  /* The 3 bars */
+  .nav-toggle__bars{
+    position: relative;
+    width: 18px;
+    height: 12px;
+  }
+
+  .nav-toggle__bars .bar{
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+
+    transition:
+      transform 320ms ease,
+      top 320ms ease,
+      opacity 200ms ease;
+  }
+
+  .nav-toggle__bars .bar:nth-child(1){ top: 0px; }
+  .nav-toggle__bars .bar:nth-child(2){ top: 5px; }
+  .nav-toggle__bars .bar:nth-child(3){ top: 10px; }
+
+  /* Morph to X when open */
+  .navbar.is-open .nav-toggle{
+    background: rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.38);
+  }
+
+  .navbar.is-open .nav-toggle__bars .bar:nth-child(1){
+    top: 5px;
+    transform: rotate(45deg);
+  }
+
+  .navbar.is-open .nav-toggle__bars .bar:nth-child(2){
+    opacity: 0;
+  }
+
+  .navbar.is-open .nav-toggle__bars .bar:nth-child(3){
+    top: 5px;
+    transform: rotate(-45deg);
+  }
+
+  /* Dropdown: keep it in the DOM so it can animate */
+  .navbar .nav-links{
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+    padding: 1rem .95rem 1.1rem;
+
+    background: rgba(11,11,11,0.96);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+
+    /* animation state (closed) */
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+      opacity 320ms ease,
+      transform 320ms ease,
+      visibility 0s linear 320ms;
+  }
+
+  .navbar.is-open .nav-links{
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+
+    transition:
+      opacity 320ms ease,
+      transform 320ms ease,
+      visibility 0s linear 0s;
+  }
+
+  /* Make links easier to tap */
+  .navbar .nav-links a{
+    padding: .4rem 0;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 601px){
+  .nav-toggle{ display: none !important; }
+  .nav-links{ display: flex !important; }
+}
+
 /* =========================
    Mobile fixes (final overrides)
    ========================= */
 @media (max-width: 600px){
   /* Navbar: keep only logo + CTA */
-  .nav-links{
-    display:none;
-  }
-
   .navbar{
     padding: .55rem .75rem;
     gap: .75rem;
@@ -1134,5 +1290,106 @@ a, button, .download-btn, .ghost-btn, .process-acc, .challenge-item{
   .back-to-top__label{
     margin:0;
     white-space:nowrap;
+  }
+}
+
+@media (max-width: 600px){
+  /* stop the wrapping behavior that causes “broken” navbar */
+  .navbar ul{
+    flex-wrap: nowrap;
+  }
+
+  /* show hamburger */
+  .nav-toggle{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    padding: 0 .75rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: transparent;
+    color: rgba(234,234,234,0.92);
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+
+  /* when open: dropdown */
+  .navbar.is-open .nav-links{
+    display: flex;
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+
+    flex-direction: column;
+    gap: .85rem;
+    padding: 1rem .95rem 1.1rem;
+
+    background: rgba(11,11,11,0.96);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+  }
+
+  /* make links easier to tap */
+  .navbar.is-open .nav-links a{
+    padding: .4rem 0;
+    font-size: 1rem;
+  }
+}
+
+/* =========================
+   Mobile dropdown animation (FINAL OVERRIDE)
+   ========================= */
+@media (max-width: 600px){
+  /* keep navbar row stable */
+  .navbar ul{ flex-wrap: nowrap; }
+
+  /* dropdown panel (keep in DOM so it can animate) */
+  .navbar .nav-links{
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    z-index: 60;
+
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+    padding: 1rem .95rem 1.1rem;
+
+    background: rgba(11,11,11,0.96);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+
+    /* CLOSED state (animatable) */
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+      opacity 320ms ease,
+      transform 320ms ease,
+      visibility 0s linear 320ms;
+  }
+
+  /* OPEN state */
+  .navbar.is-open .nav-links{
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+
+    transition:
+      opacity 320ms ease,
+      transform 320ms ease,
+      visibility 0s linear 0s;
+  }
+
+  /* nicer tap targets */
+  .navbar .nav-links a{
+    padding: .4rem 0;
+    font-size: 1rem;
   }
 }
